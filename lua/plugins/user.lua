@@ -1,5 +1,3 @@
-if true then return {} end -- WARN: REMOVE THIS LINE TO ACTIVATE THIS FILE
-
 -- You can also add or configure plugins by creating files in this `plugins/` folder
 -- PLEASE REMOVE THE EXAMPLES YOU HAVE NO INTEREST IN BEFORE ENABLING THIS FILE
 -- Here are some examples:
@@ -9,11 +7,32 @@ return {
 
   -- == Examples of Adding Plugins ==
 
-  "andweeb/presence.nvim",
   {
-    "ray-x/lsp_signature.nvim",
-    event = "BufRead",
-    config = function() require("lsp_signature").setup() end,
+    "andweeb/presence.nvim",
+    config = function(_, opts)
+      require("presence").setup {
+        auto_update = true,
+        neovim_image_text = "The One True Text Editor",
+        main_image = "neovim",
+        client_id = "793271441293967371",
+        log_level = nil,
+        debounce_timeout = 10,
+        enable_line_number = true,
+        blacklist = {},
+        buttons = true,
+        file_assets = {},
+        show_time = true,
+
+        editing_text = "Editing...",
+        file_explorer_text = "Browsing %s",
+        git_commit_text = "Committing changes",
+        plugin_manager_text = "Managing plugins",
+        reading_text = "Reading %s",
+        workspace_text = "Working on %s",
+        line_number_text = "Line %s out of %s",
+      }
+    end,
+    -- event = "VeryLazy",
   },
 
   -- == Examples of Overriding Plugins ==
@@ -25,25 +44,20 @@ return {
       dashboard = {
         preset = {
           header = table.concat({
-            " █████  ███████ ████████ ██████   ██████ ",
-            "██   ██ ██         ██    ██   ██ ██    ██",
-            "███████ ███████    ██    ██████  ██    ██",
-            "██   ██      ██    ██    ██   ██ ██    ██",
-            "██   ██ ███████    ██    ██   ██  ██████ ",
-            "",
-            "███    ██ ██    ██ ██ ███    ███",
-            "████   ██ ██    ██ ██ ████  ████",
-            "██ ██  ██ ██    ██ ██ ██ ████ ██",
-            "██  ██ ██  ██  ██  ██ ██  ██  ██",
-            "██   ████   ████   ██ ██      ██",
+            "▄▄▄        ·▄▄▄▄• ▄ .▄▄▄▄ .▄▄▌  ▄▄▌  ▄• ▄▌▄ •▄ ",
+            "▀▄ █·▪     ▪▀·.█▌██▪▐█▀▄.▀·██•  ██•  █▪██▌█▌▄▌▪",
+            "▐▀▀▄  ▄█▀▄ ▄█▀▀▀•██▀▐█▐▀▀▪▄██▪  ██▪  █▌▐█▌▐▀▀▄·",
+            "▐█•█▌▐█▌.▐▌█▌▪▄█▀██▌▐▀▐█▄▄▌▐█▌▐▌▐█▌▐▌▐█▄█▌▐█.█▌",
+            ".▀  ▀ ▀█▄▀▪·▀▀▀ •▀▀▀ · ▀▀▀ .▀▀▀ .▀▀▀  ▀▀▀ ·▀  ▀",
           }, "\n"),
+
         },
       },
     },
   },
 
   -- You can disable default plugins as follows:
-  { "max397574/better-escape.nvim", enabled = false },
+  -- { "max397574/better-escape.nvim", enabled = false },
 
   -- You can also easily customize additional setup of plugins that is outside of the plugin's setup call
   {
@@ -52,7 +66,7 @@ return {
       require "astronvim.plugins.configs.luasnip"(plugin, opts) -- include the default astronvim config that calls the setup call
       -- add more custom luasnip configuration such as filetype extend or custom snippets
       local luasnip = require "luasnip"
-      luasnip.filetype_extend("javascript", { "javascriptreact" })
+      luasnip.filetype_extend("html", { "htmldjango" })
     end,
   },
 

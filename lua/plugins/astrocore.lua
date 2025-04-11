@@ -1,5 +1,3 @@
-if true then return {} end -- WARN: REMOVE THIS LINE TO ACTIVATE THIS FILE
-
 -- AstroCore provides a central place to modify mappings, vim options, autocommands, and more!
 -- Configuration documentation can be found with `:h astrocore`
 -- NOTE: We highly recommend setting up the Lua Language Server (`:LspInstall lua_ls`)
@@ -12,7 +10,7 @@ return {
   opts = {
     -- Configure core features of AstroNvim
     features = {
-      large_buf = { size = 1024 * 256, lines = 10000 }, -- set global limits for large files for disabling features like treesitter
+      large_buf = { size = 1024 * 512, lines = 10000 }, -- set global limits for large files for disabling features like treesitter
       autopairs = true, -- enable autopairs at start
       cmp = true, -- enable completion at start
       diagnostics = { virtual_text = true, virtual_lines = false }, -- diagnostic settings on startup
@@ -40,11 +38,20 @@ return {
     -- vim options can be configured here
     options = {
       opt = { -- vim.opt.<key>
-        relativenumber = true, -- sets vim.opt.relativenumber
-        number = true, -- sets vim.opt.number
-        spell = false, -- sets vim.opt.spell
-        signcolumn = "yes", -- sets vim.opt.signcolumn to yes
-        wrap = false, -- sets vim.opt.wrap
+        number = true,
+        signcolumn = "auto",
+        autochdir = true,
+        relativenumber = true,
+        spell = true,
+        wrap = true,
+        colorcolumn = "80,120",
+        swapfile = false,
+        encoding = "UTF-8",
+        fileencoding = "UTF-8",
+        tabstop = 4,
+        showtabline = 2,
+        laststatus = 0,
+        scrolloff = 4,
       },
       g = { -- vim.g.<key>
         -- configure global vim variables (vim.g)
@@ -59,19 +66,31 @@ return {
       n = {
         -- second key is the lefthand side of the map
 
-        -- navigate buffer tabs
-        ["]b"] = { function() require("astrocore.buffer").nav(vim.v.count1) end, desc = "Next buffer" },
-        ["[b"] = { function() require("astrocore.buffer").nav(-vim.v.count1) end, desc = "Previous buffer" },
-
-        -- mappings seen under group name "Buffer"
-        ["<Leader>bd"] = {
-          function()
-            require("astroui.status.heirline").buffer_picker(
-              function(bufnr) require("astrocore.buffer").close(bufnr) end
-            )
-          end,
-          desc = "Close buffer from tabline",
+        ["<Leader>,"] = {
+          function() require("notify").dismiss { pending = true, silent = true } end,
+          desc = "Dismiss notifications",
         },
+        -- navigate buffer tabs
+        ["<C-l>"] = { function() require("astrocore.buffer").nav(vim.v.count1) end, desc = "Next buffer" },
+        ["<C-h>"] = { function() require("astrocore.buffer").nav(-vim.v.count1) end, desc = "Previous buffer" },
+
+        [";"] = { ":" },
+
+        ["<M-l>"] = {
+          function() vim.diagnostic.open_float() end,
+          desc = "Hover diagnostics",
+        },
+        ["<M-K>"] = {
+          function() require("astrocore.toggles").virtual_text() end,
+          desc = "Toggle virtual text",
+        },
+        ["<M-k>"] = {
+          function() require("astrocore.toggles").virtual_lines() end,
+          desc = "Toggle virtual lines",
+        },
+
+        ["<F3>"] = { ":w<CR>:exec '!python3 -B' shellescape(@%, 1)<CR>" },
+        ["<F4>"] = { ":w<CR>:vsplit term://python3 -B %<cr>i" },
 
         -- tables with just a `desc` key will be registered with which-key if it's installed
         -- this is useful for naming menus
@@ -80,6 +99,13 @@ return {
         -- setting a mapping to false will disable it
         -- ["<C-S>"] = false,
       },
+
+      i = {
+        ["<F3>"] = { ":w<CR>:exec '!python3.11 -B' shellescape(@%, 1)<CR>" },
+        ["<F4>"] = { ":w<CR>:vsplit term://python3.11 -B %<cr>i" },
+      },
+
+      v = {},
     },
   },
 }

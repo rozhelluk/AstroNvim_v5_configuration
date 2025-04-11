@@ -1,5 +1,3 @@
-if true then return {} end -- WARN: REMOVE THIS LINE TO ACTIVATE THIS FILE
-
 -- AstroUI provides the basis for configuring the AstroNvim User Interface
 -- Configuration documentation can be found with `:h astroui`
 -- NOTE: We highly recommend setting up the Lua Language Server (`:LspInstall lua_ls`)
@@ -34,6 +32,21 @@ return {
       LSPLoading8 = "⠧",
       LSPLoading9 = "⠇",
       LSPLoading10 = "⠏",
+
+      -- replace icons
+      -- DiagnosticError = "X",
+      -- DiagnosticHint = "?",
+      -- DiagnosticInfo = "i",
+      -- DiagnosticWarn = "!",
+      -- GitAdd = "[+]",
+      -- GitChange = "[/]",
+      -- GitConflict = "[!]",
+      -- GitDelete = "[-]",
+      -- GitIgnored = "[I]",
+      -- GitRenamed = "[R]",
+      -- GitStaged = "[S]",
+      -- GitUnstaged = "[U]",
+      -- GitUntracked = "[?]",
     },
   },
 }
