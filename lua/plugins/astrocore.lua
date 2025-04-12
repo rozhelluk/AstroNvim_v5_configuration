@@ -50,7 +50,7 @@ return {
         fileencoding = "UTF-8",
         tabstop = 4,
         showtabline = 2,
-        laststatus = 0,
+        laststatus = 2,
         scrolloff = 4,
       },
       g = { -- vim.g.<key>

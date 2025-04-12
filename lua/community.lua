@@ -44,18 +44,5 @@ return {
     },
   },
 
-  -- {
-  --   "pantran-nvim",
-  --
-  --   require("pantran").setup {
-  --     default_engine = "google",
-  --     engines = {
-  --       google = {
-  --         default_source = "auto",
-  --         default_target = "uk",
-  --       },
-  --     },
-  --   },
-  -- },
   -- { import = "astrocommunity.lsp.lsp-signature-nvim" },
 }

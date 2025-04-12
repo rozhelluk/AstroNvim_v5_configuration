@@ -50,7 +50,6 @@ return {
             "▐█•█▌▐█▌.▐▌█▌▪▄█▀██▌▐▀▐█▄▄▌▐█▌▐▌▐█▌▐▌▐█▄█▌▐█.█▌",
             ".▀  ▀ ▀█▄▀▪·▀▀▀ •▀▀▀ · ▀▀▀ .▀▀▀ .▀▀▀  ▀▀▀ ·▀  ▀",
           }, "\n"),
-
         },
       },
     },
@@ -97,6 +96,77 @@ return {
         -- disable for .vim files, but it work for another filetypes
         Rule("a", "a", "-vim")
       )
+    end,
+  },
+
+  {
+    "potamides/pantran.nvim",
+    config = function(plugin, opts)
+      local pantran = require "pantran"
+      pantran.setup {
+        -- `:lua =vim.tbl_keys(require("pantran.engines"))`.
+        default_engine = "google",
+        engines = {
+          google = {
+            fallback = {
+              default_source = "auto",
+              default_target = "uk",
+            },
+          },
+        },
+        controls = {
+          mappings = {
+            edit = {
+              n = {
+                -- Use this table to add additional mappings for the normal mode in the translation window. Either strings or function references are supported.
+                ["j"] = "gj",
+                ["k"] = "gk",
+              },
+              i = {
+                -- Similar table but for insert mode. Using 'false' disables
+                -- existing keybindings.
+                ["<C-y>"] = false,
+                ["<C-a>"] = require("pantran.ui.actions").yank_close_translation,
+              },
+            },
+            -- Keybindings here are used in the selection window.
+            select = {
+              n = {
+                -- ...
+              },
+            },
+          },
+        },
+      }
+      local map = vim.keymap.set
+
+      map(
+        "n",
+        "<leader>P",
+        pantran.motion_translate(),
+        { desc = "Pantran: Translate line", noremap = true, silent = true }
+      )
+      map(
+        "n",
+        "<M-p>",
+        pantran.motion_translate(),
+        { desc = "Pantran: Translate selection", noremap = true, silent = true }
+      )
+      map(
+        "v",
+        "<M-p>",
+        pantran.motion_translate(),
+        { desc = "Pantran: Translate selection", noremap = true, silent = true }
+      )
+
+      map(
+        "v",
+        "<leader>P",
+        pantran.motion_translate(),
+        { desc = "Pantran: Translate selection", noremap = true, silent = true }
+      )
+
+      map("n", "<leader>Pp", "<cmd>Pantran<CR>", { desc = "Pantran UI", noremap = true, silent = true })
     end,
   },
 }
