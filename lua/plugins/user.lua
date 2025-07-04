@@ -169,4 +169,12 @@ return {
       map("n", "<leader>Pp", "<cmd>Pantran<CR>", { desc = "Pantran UI", noremap = true, silent = true })
     end,
   },
+  {
+    "vzze/calculator.nvim",
+    vim.api.nvim_create_user_command(
+      "Calculate",
+      'lua require("calculator").calculate()',
+      { ["range"] = 1, ["nargs"] = 0 }
+    ),
+  },
 }
