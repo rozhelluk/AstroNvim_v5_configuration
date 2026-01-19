@@ -100,7 +100,7 @@ return {
   },
 
   {
-    "potamides/pantran.nvim",
+    "rozhelluk/pantran.nvim",
     config = function(plugin, opts)
       local pantran = require "pantran"
       pantran.setup {
@@ -177,4 +177,9 @@ return {
       { ["range"] = 1, ["nargs"] = 0 }
     ),
   },
+  -- { "danilamihailov/beacon.nvim" }, -- lazy calls setup() by itself
+  -- {
+  --   "sphamba/smear-cursor.nvim",
+  --   opts = {},
+  -- },
 }

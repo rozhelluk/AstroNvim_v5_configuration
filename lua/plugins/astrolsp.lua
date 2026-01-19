@@ -99,6 +99,16 @@ return {
     },
     -- mappings to be set up on attaching of a language server
     mappings = {
+      v = {
+        -- lf = {
+        --   function()
+        --     vim.lsp.buf.format {
+        --       range = {},
+        --     }
+        --   end,
+        --   desc = "LSP format selection",
+        -- },
+      },
       n = {
         -- a `cond` key can provided as the string of a server capability to be required to attach, or a function with `client` and `bufnr` parameters from the `on_attach` that returns a boolean
         gD = {

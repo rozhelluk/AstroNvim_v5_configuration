@@ -1,0 +1,106 @@
+local M = {}
+
+local source_buf = nil
+local target_buf = nil
+local job_id = nil
+local debounce_timer = nil
+local DEBOUNCE_MS = 1000
+
+local function stop_previous_job()
+  if job_id and job_id > 0 then
+    vim.fn.jobstop(job_id)
+    job_id = nil
+  end
+end
+
+local function trigger_debounce()
+  if debounce_timer then
+    debounce_timer:stop()
+    debounce_timer:close()
+  end
+
+  debounce_timer = vim.loop.new_timer()
+  debounce_timer:start(
+    DEBOUNCE_MS,
+    0,
+    vim.schedule_wrap(function()
+      M.update_translation()
+      if debounce_timer then
+        debounce_timer:close()
+        debounce_timer = nil
+      end
+    end)
+  )
+end
+
+local function translate_stream(text_lines, output_buf)
+  stop_previous_job()
+  if #text_lines == 0 or (#text_lines == 1 and text_lines[1] == "") then
+    if vim.api.nvim_buf_is_valid(output_buf) then vim.api.nvim_buf_set_lines(output_buf, 0, -1, false, {}) end
+    return
+  end
+
+  vim.api.nvim_buf_set_lines(output_buf, 0, -1, false, {})
+
+  local cmd = { "trans", "-b", "-t", "uk", "--no-ansi" }
+
+  local opts = {
+    stdout_buffered = false,
+    on_stdout = function(_, data, _)
+      if not data then return end
+      vim.schedule(function()
+        if not vim.api.nvim_buf_is_valid(output_buf) then return end
+        local last_row_idx = vim.api.nvim_buf_line_count(output_buf)
+        local last_line_content = vim.api.nvim_buf_get_lines(output_buf, last_row_idx - 1, last_row_idx, false)[1] or ""
+        data[1] = last_line_content .. data[1]
+        vim.api.nvim_buf_set_lines(output_buf, last_row_idx - 1, last_row_idx, false, data)
+      end)
+    end,
+
+    on_stderr = function(_, data, _) end,
+    on_exit = function() job_id = nil end,
+  }
+
+  job_id = vim.fn.jobstart(cmd, opts)
+
+  if job_id > 0 then
+    vim.fn.chansend(job_id, text_lines)
+    vim.fn.chanclose(job_id, "stdin")
+  end
+end
+
+function M.update_translation()
+  if not target_buf or not vim.api.nvim_buf_is_valid(target_buf) then return end
+  local lines = vim.api.nvim_buf_get_lines(source_buf, 0, -1, false)
+  translate_stream(lines, target_buf)
+end
+
+function M.start_split()
+  source_buf = vim.api.nvim_get_current_buf()
+  local filetype = vim.bo.filetype
+
+  vim.cmd "vsplit"
+  vim.cmd "wincmd l"
+  vim.cmd "enew"
+
+  target_buf = vim.api.nvim_get_current_buf()
+
+  vim.bo[target_buf].buftype = "nofile"
+  vim.bo[target_buf].bufhidden = "wipe"
+  vim.bo[target_buf].swapfile = false
+  vim.bo[target_buf].filetype = filetype
+  vim.wo.wrap = true
+
+  vim.cmd "wincmd h"
+
+  vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, {
+    buffer = source_buf,
+    callback = function() trigger_debounce() end,
+  })
+
+  M.update_translation()
+end
+
+vim.api.nvim_create_user_command("TranslateSplit", M.start_split, {})
+
+return M

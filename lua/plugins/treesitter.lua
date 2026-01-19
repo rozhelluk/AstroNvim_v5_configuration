@@ -9,6 +9,9 @@ return {
       "vim",
       "python",
       "bash",
+      "nix",
+      "cpp",
+      "markdown",
       -- add more arguments for adding more treesitter parsers
     },
   },
