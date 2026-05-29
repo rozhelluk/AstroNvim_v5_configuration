@@ -7,8 +7,7 @@ return {
 
   -- == Examples of Adding Plugins ==
 
-  {
-    "andweeb/presence.nvim",
+  { "andweeb/presence.nvim",
     config = function(_, opts)
       require("presence").setup {
         auto_update = true,
@@ -176,6 +175,10 @@ return {
       'lua require("calculator").calculate()',
       { ["range"] = 1, ["nargs"] = 0 }
     ),
+  },
+  {
+    "sbatin/platformio.nvim",
+    dependencies = { "numToStr/FTerm.nvim" },
   },
   -- { "danilamihailov/beacon.nvim" }, -- lazy calls setup() by itself
   -- {
